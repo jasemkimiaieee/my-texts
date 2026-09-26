@@ -55,7 +55,7 @@ textInput.addEventListener("keydown", function (event) {
   }
 
 });
-
+submitBtn.addEventListener("click", submitText())
 
 
 // =================================================
