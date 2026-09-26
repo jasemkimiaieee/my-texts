@@ -12,30 +12,41 @@
 
 <body>
 
-  <div class="container">
+  <!-- Loading -->
+  <div id="loadingScreen">
+    <div class="loader"></div>
+    <div class="loadingText">در حال دریافت متن‌ها...</div>
+  </div>
 
-    <h1>ثبت متن</h1>
 
-    <textarea
-      id="textInput"
-      placeholder="متن خود را همراه با کد وارد کنید..."
-    ></textarea>
+  <!-- Main page -->
+  <main id="mainContent" class="hidden">
 
-    <button id="submitBtn">
-      ارسال
-    </button>
+    <div class="container">
 
-    <p id="message"></p>
+      <h1>ثبت متن</h1>
 
-    <hr>
+      <textarea
+        id="textInput"
+        placeholder="متن خود را همراه با کد وارد کنید..."
+      ></textarea>
 
-    <h2>متن‌های ثبت‌شده</h2>
+      <button id="submitBtn">
+        ارسال
+      </button>
 
-    <div id="texts">
-      در حال دریافت متن‌ها...
+      <p id="message"></p>
+
+      <hr>
+
+      <h2>متن‌های ثبت‌شده</h2>
+
+      <div id="texts"></div>
+
     </div>
 
-  </div>
+  </main>
+
 
   <script src="script.js"></script>
 
