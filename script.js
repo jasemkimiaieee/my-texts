@@ -1,54 +1,117 @@
-// آدرس Worker خودت را اینجا قرار بده
-const API_URL = "https://my-text-api.jasemkimiaiee9999.workers.dev/";
+// آدرس Worker خودت
+const API_URL =
+  "https://my-text-api.jasemkimiaiee9999.workers.dev/";
 
 
-const textInput = document.getElementById("textInput");
-const submitBtn = document.getElementById("submitBtn");
-const message = document.getElementById("message");
-const texts = document.getElementById("texts");
+const textInput =
+  document.getElementById("textInput");
+
+const submitBtn =
+  document.getElementById("submitBtn");
+
+const message =
+  document.getElementById("message");
+
+const texts =
+  document.getElementById("texts");
+
+const loadingScreen =
+  document.getElementById("loadingScreen");
+
+const mainContent =
+  document.getElementById("mainContent");
 
 
-// -------------------------
+
+// =================================================
+// نمایش صفحه بعد از دریافت متن‌ها
+// =================================================
+
+function showPage() {
+
+  loadingScreen.classList.add("hidden");
+
+  mainContent.classList.remove("hidden");
+
+}
+
+
+
+// =================================================
+// ارسال با Enter
+//
+// Enter       = ارسال
+// Shift+Enter = خط جدید
+// =================================================
+
+textInput.addEventListener("keydown", function (event) {
+
+  if (event.key === "Enter" && !event.shiftKey) {
+
+    event.preventDefault();
+
+    submitText();
+
+  }
+
+});
+
+
+
+// =================================================
 // ارسال متن
-// -------------------------
+// =================================================
 
-submitBtn.addEventListener("click", async () => {
+async function submitText() {
 
-  const text = textInput.value.trim();
+  const text =
+    textInput.value.trim();
+
 
   if (!text) {
-    message.textContent = "لطفاً متن را وارد کنید.";
+
+    message.textContent =
+      "لطفاً متن را وارد کنید.";
+
     return;
+
   }
+
 
   submitBtn.disabled = true;
 
-  message.textContent = "در حال ذخیره متن...";
+  message.textContent =
+    "در حال ارسال...";
+
 
   try {
 
-    const response = await fetch(API_URL, {
+    const response =
+      await fetch(API_URL, {
 
-      method: "POST",
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json"
-      },
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
 
-      body: JSON.stringify({
-        text: text
-      })
+        body: JSON.stringify({
+          text: text
+        })
 
-    });
+      });
 
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
 
     if (!response.ok) {
 
       throw new Error(
-        data.message || "خطا در ذخیره متن"
+        data.message ||
+        "خطا در ارسال متن"
       );
 
     }
@@ -57,13 +120,15 @@ submitBtn.addEventListener("click", async () => {
     message.textContent =
       "✅ متن با موفقیت ذخیره شد.";
 
+
     textInput.value = "";
 
 
-    // دوباره متن‌ها را دریافت کن
-    loadTexts();
+    // دریافت دوباره متن‌ها
+    await loadTexts();
 
   }
+
 
   catch (error) {
 
@@ -74,25 +139,24 @@ submitBtn.addEventListener("click", async () => {
 
   }
 
+
   finally {
 
     submitBtn.disabled = false;
 
+    textInput.focus();
+
   }
 
-});
+}
 
 
 
-// -------------------------
-// دریافت متن‌های قبلی
-// -------------------------
+// =================================================
+// دریافت متن‌های ثبت شده
+// =================================================
 
 async function loadTexts() {
-
-  texts.innerHTML =
-    "در حال دریافت متن‌ها...";
-
 
   try {
 
@@ -107,7 +171,8 @@ async function loadTexts() {
     if (!response.ok) {
 
       throw new Error(
-        data.message || "خطا در دریافت متن‌ها"
+        data.message ||
+        "خطا در دریافت متن‌ها"
       );
 
     }
@@ -116,10 +181,15 @@ async function loadTexts() {
     texts.innerHTML = "";
 
 
-    if (!data.content || !data.content.trim()) {
+    if (
+      !data.content ||
+      !data.content.trim()
+    ) {
 
       texts.innerHTML =
         "هنوز متنی ثبت نشده است.";
+
+      showPage();
 
       return;
 
@@ -132,33 +202,54 @@ async function loadTexts() {
       );
 
 
-    items.reverse().forEach(text => {
+    // جدیدترین متن اول نمایش داده شود
+    items.reverse();
+
+
+    items.forEach(function (text) {
 
       const div =
         document.createElement("div");
 
-      div.className = "text-item";
+      div.className =
+        "text-item";
 
-      div.textContent = text;
+      div.textContent =
+        text;
 
       texts.appendChild(div);
 
     });
 
+
+    // فقط بعد از دریافت موفق صفحه را نشان بده
+    showPage();
+
   }
+
 
   catch (error) {
 
     console.error(error);
 
+
+    // صفحه اصلی را باز می‌کنیم
+    // تا کاربر خطا را ببیند
+
     texts.innerHTML =
       "❌ خطا در دریافت متن‌ها: " +
       error.message;
+
+    showPage();
 
   }
 
 }
 
 
-// هنگام باز شدن سایت
+
+// =================================================
+// شروع برنامه
+// =================================================
+
 loadTexts();
