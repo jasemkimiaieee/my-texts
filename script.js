@@ -1,4 +1,4 @@
-const API_URL = "WORKER_URL";
+const API_URL = "https://my-text-api.jasemkimiaiee9999.workers.dev/";
 
 const textInput = document.getElementById("textInput");
 const submitBtn = document.getElementById("submitBtn");
